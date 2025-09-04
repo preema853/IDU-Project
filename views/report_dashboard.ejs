@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .status-submitted {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto bg-white p-8 rounded-xl shadow-2xl">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4 sm:mb-0">Internship Submission Report</h1>
+            <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="flex-grow w-full sm:w-auto">
+                <label for="departmentId" class="block text-lg font-semibold text-gray-700 mb-2">Filter by Department:</label>
+                <select id="departmentId" name="departmentId"
+                    class="w-full shadow border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    onchange="window.location.href = `/report/dashboard?departmentId=${this.value}`">
+                    <option value="all">All Departments</option>
+                    <% departments.forEach(dept => { %>
+                        <option value="<%= dept.id %>" <%= dept.id == selectedDeptId ? 'selected' : '' %>>
+                            <%= dept.name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            <a href="/report/generate-pdf?departmentId=<%= selectedDeptId %>" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 text-center flex items-center justify-center">
+                <i class="fas fa-file-pdf mr-2"></i> Generate PDF Report
+            </a>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+                        <th class="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Registration Number</th>
+                        <% requiredDocs.forEach(doc => { %>
+                            <th class="py-4 px-6 text-center text-sm font-medium text-gray-500 uppercase tracking-wider"><%= doc.replace(/_/g, ' ').toUpperCase() %></th>
+                        <% }); %>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <% students.forEach(student => { %>
+                        <tr class="hover:bg-gray-100 transition-colors duration-150">
+                            <td class="py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-900"><%= student.studentName %></td>
+                            <td class="py-4 px-6 whitespace-nowrap text-sm text-gray-500"><%= student.reg_number %></td>
+                            <% requiredDocs.forEach(doc => { %>
+                                <td class="py-4 px-6 whitespace-nowrap text-center">
+                                    <% const submission = student.submissionStatus[doc]; %>
+                                    <% if (submission.status === 'Submitted') { %>
+                                        <div class="flex items-center justify-center space-x-2">
+                                            <span class="px-3 py-1 text-xs font-semibold rounded-full status-submitted">
+                                                Submitted
+                                            </span>
+                                            <a href="/view/<%= submission.filename %>" target="_blank" class="text-indigo-600 hover:text-indigo-900 font-semibold text-sm">View</a>
+                                            <a href="/uploads/<%= submission.filename %>" download class="text-green-600 hover:text-green-900 font-semibold text-sm">Download</a>
+                                        </div>
+                                    <% } else { %>
+                                        <span class="px-3 py-1 text-xs font-semibold rounded-full status-pending">
+                                            Pending
+                                        </span>
+                                    <% } %>
+                                </td>
+                            <% }); %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "internship-management-system",
+  "version": "1.0.0",
+  "description": "A Node.js and SQL-based internship management system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.5",
+    "nodemailer": "^7.0.5",
+    "pdfkit": "^0.17.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": []
+}
